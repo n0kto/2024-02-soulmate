@@ -24,6 +24,8 @@ Warning, there is no way to cancel a divorce : no more LoveToken from Airdrop.so
 
 ## LoveToken.sol
 
+Basic ERC20 Token, with all the supply distributed to 2 vaults : one for airdrop, one for staking.
+
 ## Airdrop.sol
 
 Contract managing one vault dedicated to this contract.
