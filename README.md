@@ -1,47 +1,83 @@
 # Soulmate
 
+---
+
+<p align="center">
+<img src="https://res.cloudinary.com/droqoz7lg/image/upload/q_90/dpr_2.0/c_fill,g_auto,h_320,w_320/f_auto/v1/company/jlaqqfofafa01emq3nh8?_a=BATAUVAA0" width="400" alt="soulmate">
+<br/>
+
 # Disclaimer
 
-_This code was created for Codehawks as the first flights for Valentin's day. It is made with bugs and flaws on purpose._
+_This code was created for Codehawks as the first flights for Valentine's day. It is made with bugs and flaws on purpose._
 _Don't use any part of this code without reviewing it and audit it._
+
+Here is the [link](https://www.codehawks.com/contests/clsathvgg0005yhmxmoe455mm) to the challenge and the [github repo](https://github.com/Cyfrin/2024-02-soulmate).
 
 # About
 
-Valentin's day is approaching, it is time to meet your soulmate and spread love (token) around the world !
-For this you can mint your shared Soulbound NFT with an unknown person (your soulmate) and claim LoveToken each day.
-A staking contract is available to collect more love. That's well known, if you give love, you receive more love.
+Valentine's day is approaching, and with that, it's time to meet your soulmate!
+
+We've created the Soulmate protocol, where you can mint your shared Soulbound NFT with an unknown person, and get `LoveToken` as a reward for staying with your soulmate.
+A staking contract is available to collect more love. Because if you give love, you receive more love.
 
 ## Soulmate.sol
 
 The Soulbound NFT shared by soulmates used in the protocol.
 It is used by Airdrop.sol and Staking.sol to know how long the couple are in love.
 
-A couple can use this contract to let nice words to each other on the blockchain.
+The main functions are:
 
-This contract overlook a sad possibility, but essential:
-Sometimes, love can be hard, even if it is your soulmate... but there is always another solution : get divorced.
-Warning, there is no way to cancel a divorce : no more LoveToken from Airdrop.sol for both of ex-lovers. That's an invariant.
+- `mintSoulmateToken`: Where you'll mint a soulbound NFT. You'll either be assigned to someone else who is waiting for a soulmate, or you'll be waiting for a soulmate to be assigned to you.
+- `soulmateOf`: Where you can see the soulmate of an address. If it returns `address(0)` then a soulmate has not been assigned yet.
+- `writeMessageInSharedSpace`: Where you can write messages to your soulmate.
+
+Everyone should be able to be minted a soulmate.
+
+And finally, sometimes, love can be hard, even if it is your soulmate... but there is always another solution : get divorced.
+
+- `getDivorced`: Where you and your soulmate are separated and no longer soulmates. This will cancel the possibily for 2 lovers to collect LoveToken from the airdrop. There is and should be no way to undo this action.
 
 ## LoveToken.sol
 
-Basic ERC20 Token, with all the supply distributed to 2 vaults : one for airdrop, one for staking.
+A basic ERC20 Token given to soulmates. The initial supply is distributed to 2 instances of `Vault.sol` managed by:
+
+- `Airdrop.sol`
+- `Staking.sol`
+
+This token represents how much love there is between two soulmates.
 
 ## Airdrop.sol
 
-Contract managing one vault dedicated to this contract.
-The airdrop contract only contains the function `claim()` which distribute 1 LoveToken per day to every soulmates.
-Both partner of a couple can claim their own token every days : financiary independency is important in a couple.
+Once you have a soulmate, you can claim 1 LoveToken a day.
+
+This contract has 1 main function:
+
+- `claim`: Allows only those with a soulmate to collect 1 LoveToken per day. Both soulmates can collect 1 per day (aka, 2 per day per couple).
 
 ## Staking.sol
 
-Contract managing one vault dedicated to this contract.
-The staking contract permit to deposit, withdraw and claim staking rewards.
-For every token deposit which stay during 1 week, 1 LoveToken is rewarded.
+As you claim your LoveToken, you can stake it to claim even more!
+
+This contract is dedicated to the staking functionality.
+It has the following functions:
+
+- `deposit`: Deposit LoveToken to the staking contract
+- `withdraw`: Withdraw LoveToken from the staking contract
+- `claimRewards`: Claim LoveToken rewards from the staking contract.
+
+For every 1 token deposited and 1 week left in the contract, 1 LoveToken is rewarded.
+
+Examples:
+
+- 1 token deposited for 1 week = 1 LoveToken reward
+- 7 tokens deposited for 2 weeks = 14 LoveToken reward
 
 ## Vault.sol
 
-A simple contract which have two instances : A vault for the airdrop contract, and one for the staking contract.
-Vault is just a simple contract keeping tokens and approving its manager (airdrop or staking contract) to shell out tokens according to their logics.
+The vault contract is responsible for holding the love tokens, and approving the Staking and Airdrop contracts to pull funds from the Vaults. There will be 2 vaults:
+
+- A vault to hold funds for the airdrop contract
+- A vault to hold funds for the staking contract
 
 # Getting Started
 
@@ -94,4 +130,4 @@ None
 
 # Known Issues
 
-None
+- Eventually, the counter used to give ids will reach the `type(uint256).max` and no more will be able to be minted. This is known and can be ignored.
